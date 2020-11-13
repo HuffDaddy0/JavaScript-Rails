@@ -17,11 +17,11 @@ class LanguagesController < ApplicationController
     end
 
     def edit
-        language.update(language_params)
+        @language.update(language_params)
     end
 
     def destroy
-        language.destroy
+        @language.destroy
     end
 
     private

@@ -1,0 +1,10 @@
+function init(){
+
+fetchLanguages()
+
+
+
+}
+
+
+init()
