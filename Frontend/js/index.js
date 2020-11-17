@@ -1,10 +1,2 @@
-function init(){
-
-fetchLanguages()
-
-
-
-}
-
-
-init()
+const app = new App()
+app.fetchLanguages()
