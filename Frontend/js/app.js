@@ -1,37 +1,39 @@
 class App {
 
-    static languages = []
-
     fetchLanguages(){
-        console.log("Fetching Languages")
         fetch('http://localhost:3000/languages')
         .then(resp => resp.json())
-        .then(data => console.log(data))
-            // data.forEach(lang => 
-            //     new Language(lang.id, lang.name, lang.category, lang.notes))
-            //     )
-            //     this.renderLanguages(this.languages)
+        .then(data => {
+            data.forEach(lang => {     
+                new Language(lang.id, lang.name, lang.category, lang.notes) 
+                })
+            this.renderLanguages()
+            })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error)
+        })
     }
-
-    
-    fetchLanguageById(id){
-        fetch(`http://localhost:3000/languages/${id}`)
-        .then(resp => resp.json())
-        .then(lang =>      
-                new Language(lang.id, lang.name, lang.category, lang.notes))
-                renderLanguages(lang)
-    }
-
-    renderLanguages(languages){
-        console.log("rendering")
-        const spot = document.getElementById('cards')
+        
+    renderLanguages(){
+        const spot = document.querySelector('.cards')
         const ul = document.createElement('ul')
-        const newCard = "<li> `${this.name}, ${this.notesLength} Notes` </li>"
-        spot.appendChild(ul)
-            languages.forEach(function() 
-                {spot.innerHTML += newCard)}
+        const newSpot = spot.appendChild(ul)
+        Language.all.forEach(function(lang){
+           const fin = newSpot.innerHTML += lang.htmlifyForIndex()
+           fin.addEventListener("click", function(e){
+                renderNotes(e.target.className, e.target)
+           })
+        })
     }
 
+    renderNotes(langID, cardClicked){
+        Language.findById(langID).createNotes()
+        Note.all.forEach(function(note){
+            
+        })
+
+
+    }
 
 
 }

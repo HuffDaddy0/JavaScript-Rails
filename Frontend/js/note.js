@@ -1,8 +1,17 @@
 class Note{
-    constructor(id, title, body){
-        this.id = id
-        this.title = title
-        this.body = body
+
+    static all = []
+
+    constructor(note){
+        this.id = note.id
+        this.title = note.title
+        this.body = note.body
+        Note.all.push(this)
     }
+
+    htmlifyForIndex(){
+        return(`<li class="note${note.id}"> ${this.title} </li>`)
+    }
+    
     
 }
