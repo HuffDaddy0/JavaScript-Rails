@@ -1,2 +1,6 @@
-const app = new App()
-app.fetchLanguages()
+function init(){
+    const app = new App()
+    app.fetchLanguages()
+}
+
+init()

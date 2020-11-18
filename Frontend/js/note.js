@@ -6,12 +6,30 @@ class Note{
         this.id = note.id
         this.title = note.title
         this.body = note.body
+        this.parentId = note.parentId
         Note.all.push(this)
     }
 
-    htmlifyForIndex(){
-        return(`<li class="note${note.id}"> ${this.title} </li>`)
+    static refreshNoteStorage(){
+        Note.all = []
+        Language.all.forEach(function(lang){
+            const id = lang.id
+            lang.notes.forEach(function(note){
+                Object.assign(note, {parentId: id})
+                new Note(note)
+            })
+        })
     }
-    
-    
+
+    static findNotesByLanguage(langId){
+       return Note.all.filter(function(note){
+            return note.parentId == langId
+        })
+    }
+
+    htmlifyForIndex(){
+        return(`<li class="note-summary" id="${this.id}"> ${this.title} </li>`)
+    }
+
+
 }

@@ -19,10 +19,16 @@ class Language{
         return this.notes.length
     }
 
-    
-
     htmlifyForIndex(){
-        return(`<li class="${this.id}">${this.name}: ${this.notesLength} Notes</li>`)
+        return(`<li class="lang-card" id="${this.id}">${this.name}: ${this.notesLength} Notes</li>`)
+    }
+
+    createNotes(){
+        const parentId = this.id
+        this.notes.map((note) => {
+            Object.assign(note, {parentId: parentId})
+            return newNote(note)
+        })
     }
 
     
