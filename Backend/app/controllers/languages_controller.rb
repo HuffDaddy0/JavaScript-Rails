@@ -13,7 +13,8 @@ class LanguagesController < ApplicationController
     end
 
     def create
-        language.create(language_params)
+        #byebug
+        Language.create(language_params)
     end
 
     def edit

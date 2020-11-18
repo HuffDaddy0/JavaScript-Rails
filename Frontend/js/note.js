@@ -28,7 +28,10 @@ class Note{
     }
 
     htmlifyForIndex(){
-        return(`<li class="note-summary" id="${this.id}"> ${this.title} </li>`)
+        return(`<li class="note-summary" id="${this.id}"> 
+        <h4>${this.title}</h4>
+        <p>${this.body}</p> 
+        </li>`)
     }
 
 

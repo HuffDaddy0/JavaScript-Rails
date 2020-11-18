@@ -20,8 +20,14 @@ class Language{
     }
 
     htmlifyForIndex(){
-        return(`<li class="lang-card" id="${this.id}">${this.name}: ${this.notesLength} Notes</li>`)
-    }
+        return(`<div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">${this.name}</h5>
+          <p class="card-text" id="lang${this.id}">${this.notesLength} Notes</p>
+          <a href="#" class="btn btn-primary lang-card-btn" id="${this.id}">Expand</a>
+        </div>
+      </div>`
+      )}
 
     createNotes(){
         const parentId = this.id
