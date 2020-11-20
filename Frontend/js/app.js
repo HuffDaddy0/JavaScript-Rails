@@ -22,7 +22,6 @@ class App {
     renderLanguages(){
         App.pageflag = "index"
         const holder = document.querySelector('#cards-holder')
-        //debugger
         holder.innerHTML = ""
         Language.all.forEach(function(lang){
            holder.innerHTML += lang.htmlifyForIndex()
@@ -47,7 +46,6 @@ class App {
                     }))
                         break;  
                     case "Minimize":
-                       // debugger
                         text.innerHTML = Language.findById(e.target.id).htmlifyNotesLength()
                         e.target.innerHTML = "Expand"
                         break;
@@ -69,12 +67,10 @@ class App {
         const editForm = note.editHtmlify()
         const place = document.getElementById('cards-holder')
         place.innerHTML = ""
-        //debugger
         place.innerHTML += editForm
         place.childNodes[0].addEventListener("submit",function(e){
             e.preventDefault()
             Object.assign(note, {title: e.target.noteTitle.value, body: e.target.noteBody.value})
-            debugger //!
             fetch(`http://localhost:3000/notes/${note.id}`, { 
                 method: "PATCH",
                 body: JSON.stringify({note}), 
@@ -94,7 +90,6 @@ class App {
         form.addEventListener("submit", function(e){
             e.preventDefault()
             const langData = {language: {name: e.target.langName.value, category: e.target.langCategory.value}}
-            //debugger //!
             fetch('http://localhost:3000/languages', { 
                 method: "POST",
                 body: JSON.stringify(langData), 
@@ -130,7 +125,6 @@ class App {
     mountIndexListener(){
         const langButton = document.getElementById('langButton')
         langButton.addEventListener("click", function(e){
-            console.log('clicked index') //!
             e.preventDefault
             init()
         })
@@ -139,7 +133,6 @@ class App {
     mountNewFormListener(){
         const button = document.getElementById("newLanguage")
         button.addEventListener("click", function(e){
-            console.log('new lang clicked') //!
             e.preventDefault
             app.toggleNewLanguageForm()
         })
@@ -148,7 +141,6 @@ class App {
     mountTakeNotesListener(){
         const button = document.getElementById('takeNotes')
         button.addEventListener("click", function(e){
-            console.log('take notes clicked"') //!
             e.preventDefault
             app.renderTakeNotes()
             
@@ -166,7 +158,6 @@ class App {
 
     postNewNote(){
         const noteData = {note: {title: e.target.noteTitle.value, body: e.target.noteBody.value, language_id: e.target.langId.value}}
-        //debugger //!
         console.log("Just before post request")
         fetch('http://localhost:3000/notes', { 
             method: "POST",
@@ -187,16 +178,12 @@ class App {
         const form = document.getElementById('form-holder')
         switch (form.className){
             case "hidden":
-                console.log("classname was 'hidden'") //!
                 form.className = ""
                 break;
             case "":
-                console.log('classname was ""') //!
                 form.className = "hidden"
                 break;
         }
-
-
     }
 
 
