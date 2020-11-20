@@ -150,7 +150,6 @@ class App {
 
     mountNewNoteFormListener(){
         const form = document.getElementById('newNoteForm')
-        //debugger
         form.addEventListener("submit", function(e){
             e.preventDefault()
             console.log("Note Submit")
