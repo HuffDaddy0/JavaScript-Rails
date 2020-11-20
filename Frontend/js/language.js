@@ -3,15 +3,20 @@ class Language{
 
     static all = []
 
-    constructor(id, name, category, notes){
-        this.id = id
-        this.name = name
-        this.category = category
-        this.notes = notes
+    constructor(lang){
+        this.id = lang.id
+        this.name = lang.name
+        this.category = lang.category
+        this.notes = lang.notes ||= []
         Language.all.push(this)
     }
 
-    static findById(id){
+    static refreshStorage(){
+        Language.all = []
+    }
+
+    static findById(idString){
+        const id = Number.parseInt(idString)
         return Language.all.find((lang) => lang.id === id)
     }
 
@@ -19,8 +24,12 @@ class Language{
         return this.notes.length
     }
 
+    static htmlifyAllAsOptions(){
+        return Language.all.map(lang => `<option value="${lang.id}">${lang.name}</option>`).join('')
+    }
+
     htmlifyForIndex(){
-        return(`<div class="card" style="width: 18rem;">
+        return(`<div class="card">
         <div class="card-body">
           <h5 class="card-title">${this.name}</h5>
           <p class="card-text" id="lang${this.id}">${this.notesLength} Notes</p>
@@ -28,6 +37,10 @@ class Language{
         </div>
       </div>`
       )}
+    
+    htmlifyNotesLength(){
+        return(`<p class="card-text" id="lang${this.id}">${this.notesLength} Notes</p>`)
+    }
 
     createNotes(){
         const parentId = this.id

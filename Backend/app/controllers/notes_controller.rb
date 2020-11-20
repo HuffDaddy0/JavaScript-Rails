@@ -9,7 +9,7 @@ class NotesController < ApplicationController
     end
 
     def create
-        Note.new(note_params)
+        Note.create(note_params)
     end
 
     def update

@@ -35,4 +35,18 @@ class Note{
     }
 
 
+    static newForm(){
+        return(`<form class="newNoteForm">
+        <select class="form-control form-control-lg" id="langId" placeholder="What language are you studying today?">
+            ${Language.htmlifyAllAsOptions()}
+        </select>
+        <br>
+        <input class="form-control form-control-lg" id="noteTitle" type="text" placeholder="Title">
+        <textarea class="form-control" id="noteBody" rows="20"></textarea>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        `)
+    }
+
+
 }
