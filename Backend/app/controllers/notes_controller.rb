@@ -13,8 +13,7 @@ class NotesController < ApplicationController
     end
 
     def update
-        Note.find_by(id: params[:id]).update(note_params)
-
+        note = Note.find_by(id: params[:id]).update(note_params)
     end
 
     def destroy

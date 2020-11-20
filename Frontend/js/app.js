@@ -126,13 +126,14 @@ class App {
         const langButton = document.getElementById('langButton')
         langButton.addEventListener("click", function(e){
             e.preventDefault
-            init()
+            app.renderLanguages()
         })
     }
 
     mountNewFormListener(){
         const button = document.getElementById("newLanguage")
         button.addEventListener("click", function(e){
+            console.log('New Language Clicked')
             e.preventDefault
             app.toggleNewLanguageForm()
         })
@@ -143,22 +144,22 @@ class App {
         button.addEventListener("click", function(e){
             e.preventDefault
             app.renderTakeNotes()
-            
+            app.mountNewNoteFormListener()       
         })
     }
 
     mountNewNoteFormListener(){
-        form = document.getElementById('newNoteForm')
+        const form = document.getElementById('newNoteForm')
+        //debugger
         form.addEventListener("submit", function(e){
             e.preventDefault()
             console.log("Note Submit")
-            app.postNewNote()
+            const noteData = {note: {title: e.target.noteTitle.value, body: e.target.noteBody.value, language_id: e.target.langId.value}}
+            app.postNewNote(noteData)
         })
     }
 
-    postNewNote(){
-        const noteData = {note: {title: e.target.noteTitle.value, body: e.target.noteBody.value, language_id: e.target.langId.value}}
-        console.log("Just before post request")
+    postNewNote(noteData){
         fetch('http://localhost:3000/notes', { 
             method: "POST",
             body: JSON.stringify(noteData), 
@@ -168,24 +169,22 @@ class App {
             }
         })
         .then(data => {
-            console.log(data)
-            new Note(noteData.note)
-            app.renderLanguages()
+            app.fetchLanguages()
         })
     }
 
     toggleNewLanguageForm(){
         const form = document.getElementById('form-holder')
         switch (form.className){
-            case "hidden":
-                form.className = ""
-                break;
-            case "":
-                form.className = "hidden"
-                break;
+        case "hidden":
+            console.log('case was hidden')
+            form.className = ""
+            break;
+        case "":
+            console.log('case was empty')
+            form.className = "hidden"
+            break;
         }
     }
-
-
 
 }

@@ -34,8 +34,7 @@ class Note{
 
     htmlifyForIndex(){
         return(`<li class="note-summary" id="${this.id}"> 
-        <h4>${this.title}</h4>
-        <p>${this.body}</p> 
+        <h4 class="note-title">${this.title}</h4>
         </li>`)
     }
 
@@ -48,7 +47,7 @@ class Note{
     }
 
     static newForm(){
-        return(`<form class="newNoteForm">
+        return(`<form id="newNoteForm">
         <select class="form-control form-control-lg" id="langId" placeholder="What language are you studying today?">
             ${Language.htmlifyAllAsOptions()}
         </select>
