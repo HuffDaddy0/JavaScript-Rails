@@ -39,7 +39,12 @@ class App {
                     case "Expand":
                         e.target.innerText = "Minimize"
                         text.innerHTML = ""
-                        text.innerHTML += notes 
+                        text.innerHTML += notes
+                        const noteTitles = Array.from(document.getElementsByClassName('note-summary'))
+                        noteTitles.forEach(title => title.addEventListener("click", function(e){
+                            console.log('note title clicked!')
+                            app.renderAsEditForm(e.target.parentElement.id)
+                    }))
                         break;  
                     case "Minimize":
                        // debugger
@@ -59,13 +64,30 @@ class App {
         place.innerHTML = Note.newForm()
     }
 
-// static renderAsReadOnly(){    
- //!This will be an event function that renders the read-only form 
- //!when a note title is clicked from index.
- //!Clear cards, find note(id attached to card), render note in form
- //!with edit buttons for each input, clicking edit button will 
- //!change from read-only to input in place.
-   // }
+    renderAsEditForm(id_string){
+        const note = Note.findById(id_string) 
+        const editForm = note.editHtmlify()
+        const place = document.getElementById('cards-holder')
+        place.innerHTML = ""
+        //debugger
+        place.innerHTML += editForm
+        place.childNodes[0].addEventListener("submit",function(e){
+            e.preventDefault()
+            Object.assign(note, {title: e.target.noteTitle.value, body: e.target.noteBody.value})
+            debugger //!
+            fetch(`http://localhost:3000/notes/${note.id}`, { 
+                method: "PATCH",
+                body: JSON.stringify({note}), 
+                headers: { 
+                    "Content-type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+            .then(resp => {console.log(resp)
+                app.renderLanguages()
+            })
+        })
+    }
 
     mountFormListener(){
         const form = document.getElementById('newLanguageForm')
@@ -81,8 +103,7 @@ class App {
                     "Accept": "application/json"
                 }
             })
-            //.then(resp => resp.json()) //!
-            .then(data => {console.log(data) //!
+            .then(data => {
             e.target.reset()
             app.toggleNewLanguageForm()
             new Language(langData.language)
@@ -130,6 +151,7 @@ class App {
             console.log('take notes clicked"') //!
             e.preventDefault
             app.renderTakeNotes()
+            
         })
     }
 
@@ -143,28 +165,25 @@ class App {
     }
 
     postNewNote(){
-            const noteData = {note: {title: e.target.noteTitle.value, category: e.target.noteBody.value, language_id: e.target.langId.value}}
-            //debugger //!
-            console.log("Just before post request")
-            fetch('http://localhost:3000/notes', { 
-                method: "POST",
-                body: JSON.stringify(noteData), 
-                headers: { 
-                    "Content-type": "application/json",
-                    "Accept": "application/json"
-                }
-            })
-            .then(data => {
-                console.log(data)
-                new Note(noteData.note)//.renderAsReadOnly()
-                //! Create renderAsReadOnly method, will need
-                //! read-onlyHtmlify in note.js
-            })
+        const noteData = {note: {title: e.target.noteTitle.value, body: e.target.noteBody.value, language_id: e.target.langId.value}}
+        //debugger //!
+        console.log("Just before post request")
+        fetch('http://localhost:3000/notes', { 
+            method: "POST",
+            body: JSON.stringify(noteData), 
+            headers: { 
+                "Content-type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+        .then(data => {
+            console.log(data)
+            new Note(noteData.note)
+            app.renderLanguages()
+        })
     }
 
     toggleNewLanguageForm(){
-        console.log("in newlanguageform function")
-        //debugger  //!
         const form = document.getElementById('form-holder')
         switch (form.className){
             case "hidden":

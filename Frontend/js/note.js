@@ -6,8 +6,13 @@ class Note{
         this.id = note.id
         this.title = note.title
         this.body = note.body
-        this.parentId = note.parentId
+        this.language_id = note.language_id
         Note.all.push(this)
+    }
+
+    static findById(id_string){
+        const id = Number.parseInt(id_string)
+        return Note.all.find(note => note.id === id)
     }
 
     static refreshNoteStorage(){
@@ -15,7 +20,7 @@ class Note{
         Language.all.forEach(function(lang){
             const id = lang.id
             lang.notes.forEach(function(note){
-                Object.assign(note, {parentId: id})
+                Object.assign(note, {language_id: id})
                 new Note(note)
             })
         })
@@ -23,7 +28,7 @@ class Note{
 
     static findNotesByLanguage(langId){
        return Note.all.filter(function(note){
-            return note.parentId == langId
+            return note.language_id == langId
         })
     }
 
@@ -34,6 +39,13 @@ class Note{
         </li>`)
     }
 
+    editHtmlify(){
+        return(`<form class="editNoteForm">
+        <input class="form-control form-control-lg" id="noteTitle" type="text" value="${this.title}">
+        <textarea class="form-control" id="noteBody"  rows="20">${this.body}</textarea>
+        <button type="submit" class="btn btn-primary">Edit</button>
+        </form>`)
+    }
 
     static newForm(){
         return(`<form class="newNoteForm">

@@ -13,10 +13,17 @@ class NotesController < ApplicationController
     end
 
     def update
+        Note.find_by(id: params[:id]).update(note_params)
 
     end
 
     def destroy
 
     end
+
+    private
+    def note_params
+        params.require(:note).permit(:id, :title, :body, :language_id)
+    end
+
 end

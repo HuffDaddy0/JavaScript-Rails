@@ -43,9 +43,9 @@ class Language{
     }
 
     createNotes(){
-        const parentId = this.id
+        const language_id = this.id
         this.notes.map((note) => {
-            Object.assign(note, {parentId: parentId})
+            Object.assign(note, {language_id: language_id})
             return newNote(note)
         })
     }
