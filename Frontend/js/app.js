@@ -59,19 +59,13 @@ class App {
         place.innerHTML = Note.newForm()
     }
 
-// static renderShowNotes(noteId){ 
-    //     Language.findById()
+// static renderAsReadOnly(){    
  //!This will be an event function that renders the read-only form 
  //!when a note title is clicked from index.
  //!Clear cards, find note(id attached to card), render note in form
  //!with edit buttons for each input, clicking edit button will 
  //!change from read-only to input in place.
-    //     Note.all.forEach(function(note){
-    //         debugger
-    //     })
-
-
-    // }
+   // }
 
     mountFormListener(){
         const form = document.getElementById('newLanguageForm')
