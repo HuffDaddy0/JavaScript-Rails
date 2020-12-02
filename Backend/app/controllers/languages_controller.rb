@@ -14,7 +14,9 @@ class LanguagesController < ApplicationController
 
     def create
         #byebug
-        Language.create(language_params)
+        language = Language.create(language_params)
+
+        render json: language
     end
 
     def edit

@@ -23,11 +23,11 @@ class Language{
     get notesLength(){
         return this.notes.length
     }
-
+//HTML for New Note Form
     static htmlifyAllAsOptions(){
         return Language.all.map(lang => `<option value="${lang.id}">${lang.name}</option>`).join('')
     }
-
+//HTML for index card
     htmlifyForIndex(){
         return(`<div class="card">
         <div class="card-body">
@@ -37,11 +37,11 @@ class Language{
         </div>
       </div>`
       )}
-    
+   
     htmlifyNotesLength(){
         return(`<p class="card-text" id="lang${this.id}">${this.notesLength} Notes</p>`)
     }
-
+//creates Note objects from this Language
     createNotes(){
         const language_id = this.id
         this.notes.map((note) => {
