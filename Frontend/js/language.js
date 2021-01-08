@@ -11,22 +11,27 @@ class Language{
         Language.all.push(this)
     }
 
-    static refreshStorage(){
+    static refreshStorage(data){
         Language.all = []
+        data.forEach(lang => {     
+            new Language(lang) 
+        })
     }
 
     static findById(idString){
         const id = Number.parseInt(idString)
-        return Language.all.find((lang) => lang.id === id)
+        return Language.all.find(lang => lang.id === id)
     }
 
     get notesLength(){
         return this.notes.length
     }
+
 //HTML for New Note Form
     static htmlifyAllAsOptions(){
         return Language.all.map(lang => `<option value="${lang.id}">${lang.name}</option>`).join('')
     }
+
 //HTML for index card
     htmlifyForIndex(){
         return(`<div class="card">
@@ -34,6 +39,7 @@ class Language{
           <h5 class="card-title">${this.name}</h5>
           <p class="card-text" id="lang${this.id}">${this.notesLength} Notes</p>
           <a href="#" class="btn btn-primary lang-card-btn" id="${this.id}">Expand</a>
+          <a href="#" class="btn btn-primary lang-card-delete-btn" id="${this.id}">Delete</a
         </div>
       </div>`
       )}
@@ -41,12 +47,12 @@ class Language{
     htmlifyNotesLength(){
         return(`<p class="card-text" id="lang${this.id}">${this.notesLength} Notes</p>`)
     }
+
 //creates Note objects from this Language
     createNotes(){
-        const language_id = this.id
-        this.notes.map((note) => {
-            Object.assign(note, {language_id: language_id})
-            return newNote(note)
+        this.notes.map(note => {
+            Object.assign(note, {language_id: this.id})
+            return new Note(note)
         })
     }
 

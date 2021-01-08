@@ -14,23 +14,22 @@ class Note{
         const id = Number.parseInt(id_string)
         return Note.all.find(note => note.id === id)
     }
+    
 //empties Note.all and repopulates with all notes from
 //existing Languages
     static refreshNoteStorage(){
         Note.all = []
-        Language.all.forEach(function(lang){
-            const id = lang.id
-            lang.notes.forEach(function(note){
-                Object.assign(note, {language_id: id})
+        Language.all.forEach(lang => {
+            lang.notes.forEach(note => {
+                Object.assign(note, {language_id: lang.id})
                 new Note(note)
             })
         })
     }
 
     static findNotesByLanguage(langId){
-       return Note.all.filter(function(note){
-            return note.language_id == langId
-        })
+        return Note.all.filter(note => note.language_id == langId
+        )
     }
 
     htmlifyForIndex(){

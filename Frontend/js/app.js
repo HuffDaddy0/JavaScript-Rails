@@ -4,16 +4,13 @@ class App {
 
 //Handles GET fetch request for all data
 //used in the application
-    fetchLanguages(){
+    fetchInitData(){
         fetch('http://localhost:3000/languages')
         .then(resp => resp.json())
         .then(data => {
-            Language.refreshStorage()
-            data.forEach(lang => {     
-                new Language(lang) 
-            })
+            Language.refreshStorage(data)
             Note.refreshNoteStorage()
-            this.renderLanguages(Language.all)
+            this.renderSortedLanguages(Language.all)
             })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error)
@@ -27,9 +24,7 @@ class App {
         App.pageflag = "index"
         const holder = document.querySelector('#cards-holder')
         holder.innerHTML = ""
-        langs.forEach(function(lang){
-           holder.innerHTML += lang.htmlifyForIndex()
-        })
+        langs.forEach(lang => holder.innerHTML += lang.htmlifyForIndex())
         const langCards = document.querySelectorAll('.lang-card-btn')
            langCards.forEach(function(f){
             f.addEventListener("click", function(e){
@@ -66,7 +61,11 @@ class App {
         place.innerHTML = Note.newForm()
     }
 
-//renders populates Note form=> adds submit listener,
+    renderAsNoteView(id_string){
+    
+    }
+
+//renders & populates Note form => adds submit listener,
 //handles POST request => renders index
     renderAsEditForm(id_string){
         const note = Note.findById(id_string) 
@@ -85,9 +84,8 @@ class App {
                     "Accept": "application/json"
                 }
             })
-            .then(resp => {console.log(resp)
-                app.renderLanguages(Language.all)
-            })
+            .then(app.renderSortedLanguages(Language.all)
+            )
         })
     }
 
@@ -113,7 +111,7 @@ class App {
             app.toggleNewLanguageForm()
             new Language(data)
                 if (App.pageFlag === "index"){
-                    app.renderLanguages(Language.all)
+                    app.renderSortedLanguages(Language.all)
                 } else if (App.pageFlag === "new"){              
                     app.renderTakeNotes()
                 }
@@ -137,7 +135,7 @@ class App {
         const langButton = document.getElementById('langButton')
         langButton.addEventListener("click", function(e){
             e.preventDefault
-            app.renderLanguages(Language.all)
+            app.renderSortedLanguages(Language.all)
         })
     }
 
@@ -170,33 +168,20 @@ class App {
         })
     }
 
-//handles sorting languages on index page
-    mountSortListener(){
-        const btn = document.getElementById('sort')
-        btn.addEventListener("click", function(){
-            app.renderSortedLanguages()
-        })
-
-    }
-
     renderSortedLanguages(){
-      const sortedLanguages = Language.all.sort(function(a,b){
+      const sortedLanguages = Language.all.sort((a,b) => {
           let firstLang = a.name.toUpperCase()
           let lastLang = b.name.toUpperCase()
-        if (firstLang < lastLang) {
+            if (firstLang < lastLang) {
             return -1;
           }
-          if (firstLang > lastLang) {
+            if (firstLang > lastLang) {
             return 1;
           }
           // a must be equal to b
-          return 0;
+            return 0;
       })
       app.renderLanguages(sortedLanguages)
-    }
-
-    sorter(){
-
     }
 
 //handles POST fetch with new note => re-initializes application
@@ -211,10 +196,9 @@ class App {
         })
         .then(resp => resp.json())
         .then(data => {
-            debugger
             new Note(data)
-            this.renderLanguages()
         })
+        .then(this.renderSortedLanguages(Language.all))
     }
 
 //changes class between "hidden" and "" on New Language Form

@@ -6,10 +6,9 @@ pageFlag = "index"
 function init(){
     pageFlag = "index"
     app = new App()
-    app.fetchLanguages()
+    app.fetchInitData()
     app.mountFormListener()
     app.mountNavListeners()
-    app.mountSortListener()
 }
 
 init()
