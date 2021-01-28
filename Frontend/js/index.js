@@ -6,7 +6,7 @@ pageFlag = "index"
 function init(){
     pageFlag = "index"
     app = new App()
-    app.fetchInitData()
+    Fetches.initData()
     app.mountFormListener()
     app.mountNavListeners()
 }

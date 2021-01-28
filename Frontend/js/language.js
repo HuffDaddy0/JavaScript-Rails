@@ -48,14 +48,8 @@ class Language{
         return(`<p class="card-text" id="lang${this.id}">${this.notesLength} Notes</p>`)
     }
 
-//creates Note objects from this Language
-    createNotes(){
-        this.notes.map(note => {
-            Object.assign(note, {language_id: this.id})
-            return new Note(note)
-        })
-    }
-
     
+
+ 
 }
     

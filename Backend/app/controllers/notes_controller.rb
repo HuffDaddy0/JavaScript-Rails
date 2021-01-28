@@ -1,21 +1,30 @@
 class NotesController < ApplicationController
 
     def index
-
     end
 
     def show
-
     end
 
     def create
-        note = Note.create(note_params)
+        note = Note.new(note_params)
+        note.save
 
         render json: note
     end
 
     def update
-        note = Note.find_by(id: params[:id]).update(note_params)
+        note = Note.find_by(id: params[:id])
+        if note.update(note_params) 
+            render json: {
+                note: note,
+                status: 200
+                }
+        else
+            render json: {
+                status: 401 
+                }
+        end
     end
 
     def destroy

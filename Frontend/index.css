@@ -5,3 +5,9 @@
 .note-title:hover{
     cursor: pointer
 }
+
+.spinner-border {
+    margin-top: 20%;
+    margin-left: 50%;
+}
+

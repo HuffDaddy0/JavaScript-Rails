@@ -21,6 +21,14 @@
               </nav>
         </div>
 
+        <!-- Error Message Bubble -->
+        <div class="alert alert-success hidden" id="success-alert" role="alert">
+            
+        </div>
+        <div class="alert alert-danger hidden" id="danger-alert" role="alert">
+            
+        </div>
+
         <!-- New Language Form (Toggles) -->
         <div class="hidden" id="form-holder">
             <form id="newLanguageForm">
@@ -34,9 +42,9 @@
             </form>
         </div>
         <br>
-        <div class="container-fluid" id="cards-holder">
+        <div class="container-fluid" id="content-holder">
         </div>
-        
+
     </div>
 
 
@@ -47,6 +55,9 @@
     <script src="js/app.js"></script>
     <script src="js/note.js"></script>
     <script src="js/language.js"></script>
+    <script src="js/alerts.js"></script>
+    <script src="js/fetch.js"></script>
+    <script src="js/events.js"></script>
     <script src="js/index.js"></script>
 </body>
 </html>
