@@ -1,3 +1,9 @@
+body {
+    background-image: url("https://i.imgur.com/If1JaaE.jpeg");
+    background-size: cover;
+    background-color: black;
+}
+
 .hidden{
     display: none
 }
@@ -9,5 +15,6 @@
 .spinner-border {
     margin-top: 20%;
     margin-left: 50%;
+    margin-right: 50%;
 }
 

@@ -11,9 +11,9 @@ class Alerts {
     static danger(error){
         const alert = document.getElementById('danger-alert')
         alert.classList.remove('hidden')
-        alert.innerHTML = (`<h1>${error}</h1>`)
+        alert.innerHTML = (`<h1>${error.message}</h1>`)
         setTimeout(() => alert.classList.add('hidden'), 5000 )
     }
 
-    
+
 }

@@ -1,5 +1,5 @@
 
-class Language{
+class Languages{
 
     static all = []
 
@@ -8,19 +8,19 @@ class Language{
         this.name = lang.name
         this.category = lang.category
         this.notes = lang.notes ||= []
-        Language.all.push(this)
+        Languages.all.push(this)
     }
 
     static refreshStorage(data){
-        Language.all = []
+        Languages.all = []
         data.forEach(lang => {     
-            new Language(lang) 
+            new Languages(lang) 
         })
     }
 
     static findById(idString){
         const id = Number.parseInt(idString)
-        return Language.all.find(lang => lang.id === id)
+        return Languages.all.find(lang => lang.id === id)
     }
 
     get notesLength(){
@@ -29,7 +29,7 @@ class Language{
 
 //HTML for New Note Form
     static htmlifyAllAsOptions(){
-        return Language.all.map(lang => `<option value="${lang.id}">${lang.name}</option>`).join('')
+        return Languages.all.map(lang => `<option value="${lang.id}">${lang.name}</option>`).join('')
     }
 
 //HTML for index card

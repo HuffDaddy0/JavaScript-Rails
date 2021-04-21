@@ -9,7 +9,7 @@ class Note{
         this.language_id = note.language_id
         Note.all.push(this)
     }
-    
+
 
     static findById(id_string){
         const id = Number.parseInt(id_string)
@@ -21,7 +21,7 @@ class Note{
 //existing Languages
     static refreshNoteStorage(){
         Note.all = []
-        Language.all.forEach(lang => {
+        Languages.all.forEach(lang => {
             lang.notes.forEach(note => {
                 Object.assign(note, {language_id: lang.id})
                 new Note(note)
@@ -68,7 +68,7 @@ class Note{
 
     static renderSelectInput(){
         return(`<select class="form-control form-control-lg" id="langId" >
-            ${Language.htmlifyAllAsOptions()}
+            ${Languages.htmlifyAllAsOptions()}
         </select>`)
     }
 

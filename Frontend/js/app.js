@@ -1,19 +1,25 @@
 class App {
 
-    static pageFlag = "index"
+    constructor(){
+        this.pageFlag = "index",
+        this.sortBy = "a-z"
+    }
 
     
 //Clears DOM, iterates Language and creates a card for
 //each Language, adds events to buttons, and handles toggling
 //Notes.
     renderLanguages(langs){
-        App.pageflag = "index"
-        const holder = document.querySelector('#content-holder')
-        holder.innerHTML = ""
-        langs.forEach(lang => holder.innerHTML += lang.htmlifyForIndex())
-        const langCards = document.querySelectorAll('.lang-card-btn')
-           langCards.forEach(function(f){
-            f.addEventListener("click", function(e){
+        app.pageflag = "index"
+        const container = document.querySelector('#content-holder')
+        container.innerHTML = ""
+        if (langs.length === 0) {
+            Alerts.danger({message: `You don't have any languages yet!
+            Click 'New Language' to add one.`})
+        }
+        langs.forEach(lang => container.innerHTML += lang.htmlifyForIndex())
+        document.querySelectorAll('.lang-card-btn').forEach(f => {
+            f.addEventListener("click", e => {
                 e.preventDefault()
                 const notes =  `<ul> ${Note.findNotesByLanguage(e.target.id).map(note=>
                 note.htmlifyForIndex()).join('')} </ul>`
@@ -30,13 +36,14 @@ class App {
                     }))
                         break;  
                     case "Minimize":
-                        text.innerHTML = Language.findById(e.target.id).htmlifyNotesLength()
+                        text.innerHTML = Languages.findById(e.target.id).htmlifyNotesLength()
                         e.target.innerHTML = "Expand"
                         break;
                     }
                 }
             })
         })
+        app.mountDeleteListener()
     }
 
 
@@ -50,7 +57,7 @@ class App {
 
 // Clears DOM, renders new note form
     renderTakeNotes(){
-        App.pageFlag = "new"
+        app.pageFlag = "new"
         document.getElementById('content-holder').innerHTML = Note.newForm()
     }
 
@@ -69,17 +76,17 @@ class App {
             e.preventDefault()
             Object.assign(note, {title: e.target.noteTitle.value, body: e.target.noteBody.value})
             Fetches.editNote(note)
-            .then(resp => resp.json())
-            .then(data => {
-                if (data.status !== 200){
-                    console.log(data.status)
-                    Alerts.danger(data.error)
-                } else {
-                    console.log(data.status)
-                    Alerts.success(`${data.note.title} edited successfully!`)
-                    app.renderSortedLanguages(Language.all)
-                }
-            })
+            // .then(resp => resp.json())
+            // .then(data => {
+            //     if (data.status !== 200){
+            //         console.log(data.status)
+            //         Alerts.danger(data.error)
+            //     } else {
+            //         console.log(data.status)
+            //         Alerts.success(`${data.note.title} edited successfully!`)
+            //         app.renderSortedLanguages(Languages.all)
+            //     }
+            // })
             .catch(error => Alerts.danger(error))
         })
     }
@@ -94,19 +101,7 @@ class App {
             e.preventDefault()
             const langData = { language: { name: e.target.langName.value, category: e.target.langCategory.value }}
             Fetches.postLanguage(langData)
-            .then(resp => resp.json())
-            .then(data => {
-                e.target.reset()
-                app.toggleNewLanguageForm()
-                new Language(data)
-                    if ( App.pageFlag === "index" ){
-                        app.renderSortedLanguages( Language.all )
-                    } else if ( App.pageFlag === "new" ){              
-                        app.renderTakeNotes()
-                    }
-                Alerts.success( `${data.name} created successfully!` )
-            })
-            .catch( error => Alerts.danger(error) )
+            e.target.reset()
         })
     }
 
@@ -124,7 +119,7 @@ class App {
         const langButton = document.getElementById('langButton')
         langButton.addEventListener("click", function(e){
             e.preventDefault
-            app.renderSortedLanguages(Language.all)
+            app.renderLanguages(Languages.all)
         })
     }
 
@@ -149,11 +144,18 @@ class App {
         })
     }
 
+    //!              here
     mountDeleteListener(){
-        document.getElementsByClassName("lang-card-delete-btn")
-        .addEventListener("click", e => {
-             Fetches.deleteLanguage(e.id)
-        })
+        const buttons = Array.from(document.getElementsByClassName('lang-card-delete-btn'))
+            buttons.forEach(button => button.addEventListener("click", e => {
+            e.preventDefault()
+            console.log("clicked!")
+            Fetches.deleteLanguage(e)
+            console.log(Languages.all.filter(lang => lang.id != e.target.id)
+            )
+            Languages.all = Languages.all.filter(lang => lang.id !== Number.parseInt(e.target.id))
+            app.renderLanguages(Languages.all)
+        }))
 
     }
 
@@ -171,7 +173,7 @@ class App {
     
 
     renderSortedLanguages(){
-      const sortedLanguages = Language.all.sort((a,b) => {
+      const sortedLanguages = Languages.all.sort((a,b) => {
           let firstLang = a.name.toUpperCase()
           let lastLang = b.name.toUpperCase()
             if (firstLang < lastLang) {
@@ -200,7 +202,7 @@ class App {
         .then(data => {
             new Note(data)
         })
-        .then(this.renderSortedLanguages(Language.all))
+        .then(this.renderSortedLanguages(Languages.all))
         .catch(error => Alerts.danger(error))
     }
 
