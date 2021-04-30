@@ -1,12 +1,5 @@
 class Fetches {
 
-    URL = 'http://localhost:3000'
-    // constructor(path, method){
-    //     this.method
-    //     this.path
-    // }
-
-
 //Handles GET fetch request for all data
 //used in the application
     static initData(){
@@ -57,11 +50,7 @@ class Fetches {
             .then(data => {
                 app.toggleNewLanguageForm()
                 new Languages(data)
-                if ( app.pageFlag === "index" ){
-                    app.renderSortedLanguages( Languages.all )
-                } else if ( app.pageFlag === "new" ){              
-                    app.renderTakeNotes()
-                }
+                app.renderByPageFlag()
                 Alerts.success( `${data.name} created successfully!` )
             })
             .catch( error => Alerts.danger(error) )
@@ -77,8 +66,9 @@ class Fetches {
         })
     }
 
-    //handles POST fetch with new note => re-initializes application
+//handles POST fetch with new note => re-initializes application
     static postNewNote(noteData){
+        console.log(noteData)
         fetch('http://localhost:3000/notes', { 
             method: "POST",
             body: JSON.stringify(noteData), 

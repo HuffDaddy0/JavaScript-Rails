@@ -35,6 +35,7 @@ class App {
     renderTakeNotes(){
         this.pageFlag = "new"
         this.contentContainer.innerHTML = Note.newForm()
+        this.mountNewNoteFormListener()
     }
 
 
@@ -67,7 +68,7 @@ class App {
 // mounts events on all navbar components
     mountNavListeners(){
         this.mountIndexListener()
-        this.mountNewFormListener()
+        this.mountNewLanguageFormListener()
         this.mountTakeNotesListener()
     }
     
@@ -83,7 +84,7 @@ class App {
 
 
 //mounts "New Language" button event
-    mountNewFormListener(){
+    mountNewLanguageFormListener(){
         const button = document.getElementById("newLanguage")
         button.addEventListener("click", function(e){
             e.preventDefault
@@ -139,6 +140,14 @@ class App {
             return 0;
       })
       this.renderLanguageCards(sortedLanguages)
+    }
+
+    renderByPageFlag(){
+        if ( app.pageFlag === "index" ){
+            app.renderSortedLanguages( Languages.all )
+        } else if ( app.pageFlag === "new" ){              
+            app.renderTakeNotes()
+        }
     }
 
 //changes class between "hidden" and "" on New Language Form
