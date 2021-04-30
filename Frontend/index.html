@@ -5,10 +5,12 @@
     <link rel="stylesheet" href="./index.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test</title>
+    <title>CodeNotes</title>
 </head>
+
 <body>
     <div class="container">
+
         <!-- Header and NavBar -->
         <div class="jumbotron">
             <h1 class="display-4">CodeNotes</h1>
@@ -22,18 +24,15 @@
         </div>
 
         <!-- Error Message Bubble -->
-        <div class="alert alert-success hidden" id="success-alert" role="alert">
-            
-        </div>
-        <div class="alert alert-danger hidden" id="danger-alert" role="alert">
-            
-        </div>
+        <div class="alert alert-success hidden" id="success-alert" role="alert"></div>
+        
+        <div class="alert alert-danger hidden" id="danger-alert" role="alert"></div>
 
         <!-- New Language Form (Toggles) -->
         <div class="hidden" id="form-holder">
             <form id="newLanguageForm">
-                <l>Add A New Language!</l>
-                <input type="text" id="langName" class="form-control" placeholder="  Name">
+                <p>Add A New Language!</p>
+                <input type="text" id="langName" class="form-control" placeholder="Name">
                 <select class="form-control form-control-lg" id="langCategory">
                     <option>Language</option>
                     <option>Framework</option>
@@ -44,7 +43,6 @@
         <br>
         <div class="container-fluid" id="content-holder">
         </div>
-
     </div>
 
 

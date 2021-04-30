@@ -37,7 +37,7 @@ class Languages{
         return(`<div class="card">
         <div class="card-body">
           <h5 class="card-title">${this.name}</h5>
-          <p class="card-text" id="lang${this.id}">${this.notesLength} Notes</p>
+          <p class="card-text" id="lang${this.id}"></p>
           <a href="#" class="btn btn-primary lang-card-btn" id="${this.id}">Expand</a>
           <a href="#" class="btn btn-primary lang-card-delete-btn" id="${this.id}">Delete</a
         </div>

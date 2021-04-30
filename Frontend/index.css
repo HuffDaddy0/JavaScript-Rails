@@ -18,3 +18,11 @@ body {
     margin-right: 50%;
 }
 
+form > p {
+    color: white;
+}
+
+.spinner-border {
+    color: white;
+}
+

@@ -15,7 +15,12 @@ class Note{
         const id = Number.parseInt(id_string)
         return Note.all.find(note => note.id === id)
     }
-
+    
+    
+    static findByLanguage(langId){
+        return Note.all.filter(note => note.language_id == langId
+        )
+    }
 
 //empties Note.all and repopulates with all notes from
 //existing Languages
@@ -29,48 +34,46 @@ class Note{
         })
     }
 
+//HTML for "New Note" Form
+    static newForm(){
+        return(
+            `<form id="newNoteForm">
+            ${Note.renderSelectInput()}
+            <br>
+            <input class="form-control form-control-lg" id="noteTitle" type="text" placeholder="Title">
+            <textarea class="form-control" id="noteBody" rows="20"></textarea>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>`
+            )
+        }
 
-    static findNotesByLanguage(langId){
-        return Note.all.filter(note => note.language_id == langId
+// renders HTML for opened language accordian
+    htmlifyForIndex(){
+        return(
+        `<li class="note-summary" id="${this.id}"> 
+            <h4 class="note-title">${this.title}</h4>
+        </li>`
         )
     }
 
-
-    htmlifyForIndex(){
-        return(`<li class="note-summary" id="${this.id}"> 
-        <h4 class="note-title">${this.title}</h4>
-        </li>`)
+//renders select dropdown
+    static renderSelectInput(){
+        return(
+        `<select class="form-control form-control-lg" id="langId" >
+            ${Languages.htmlifyAllAsOptions()}
+        </select>`
+        )
     }
-
 
 // Returns pre-populated Form
     editHtmlify(){
-        return(`<form class="editNoteForm">
-        <input class="form-control form-control-lg" id="noteTitle" type="text" value="${this.title}">
-        <textarea class="form-control" id="noteBody"  rows="20">${this.body}</textarea>
-        <button type="submit" class="btn btn-primary">Edit</button>
-        </form>`)
+        return(
+        `<form class="editNoteForm">
+            <input class="form-control form-control-lg" id="noteTitle" type="text" value="${this.title}">
+            <textarea class="form-control" id="noteBody"  rows="20">${this.body}</textarea>
+            <button type="submit" class="btn btn-primary">Edit</button>
+        </form>`
+        )
     }
     
-
-//HTML for "New Note" Form
-    static newForm(){
-        return(`<form id="newNoteForm">
-        ${Note.renderSelectInput()}
-        <br>
-        <input class="form-control form-control-lg" id="noteTitle" type="text" placeholder="Title">
-        <textarea class="form-control" id="noteBody" rows="20"></textarea>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        `)
-    }
-
-
-    static renderSelectInput(){
-        return(`<select class="form-control form-control-lg" id="langId" >
-            ${Languages.htmlifyAllAsOptions()}
-        </select>`)
-    }
-
-
 }

@@ -1,11 +1,17 @@
 class Fetches {
 
+    URL = 'http://localhost:3000'
+    // constructor(path, method){
+    //     this.method
+    //     this.path
+    // }
+
 
 //Handles GET fetch request for all data
 //used in the application
     static initData(){
         app.renderSpinner()
-        fetch('http://localhost:3000/languages')
+        fetch(`http://localhost:3000/languages`)
         .then(resp => resp.json())
         .then(data => {
             Languages.refreshStorage(data)
@@ -29,14 +35,13 @@ class Fetches {
         .then(resp => resp.json())
         .then(data => {
             if (data.status !== 200){
-                console.log(data.status)
                 Alerts.danger(data.error)
             } else {
-                console.log(data.status)
                 Alerts.success(`${data.note.title} edited successfully!`)
-                app.renderSortedLanguages(Languages.all)
+                Fetches.initData
             }
         })
+        .catch(error => Alerts.danger(error))
     }
 
     static postLanguage(language){
@@ -52,9 +57,9 @@ class Fetches {
             .then(data => {
                 app.toggleNewLanguageForm()
                 new Languages(data)
-                if ( App.pageFlag === "index" ){
+                if ( app.pageFlag === "index" ){
                     app.renderSortedLanguages( Languages.all )
-                } else if ( App.pageFlag === "new" ){              
+                } else if ( app.pageFlag === "new" ){              
                     app.renderTakeNotes()
                 }
                 Alerts.success( `${data.name} created successfully!` )
@@ -70,6 +75,27 @@ class Fetches {
                 "Accept": "application/json"
             }
         })
+    }
+
+    //handles POST fetch with new note => re-initializes application
+    static postNewNote(noteData){
+        fetch('http://localhost:3000/notes', { 
+            method: "POST",
+            body: JSON.stringify(noteData), 
+            headers: { 
+                "Content-type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            new Note(data)
+        })
+        .then(() => {
+            app.renderSortedLanguages(Languages.all)
+            Alerts.success("Notebook successfully updated")
+        })
+        .catch(error => Alerts.danger(error))
     }
 
 }

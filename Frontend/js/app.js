@@ -3,53 +3,29 @@ class App {
     constructor(){
         this.pageFlag = "index",
         this.sortBy = "a-z"
+        this.contentContainer = document.querySelector('#content-holder')
+        this.newLanguageForm = document.getElementById('newLanguageForm')
     }
 
     
 //Clears DOM, iterates Language and creates a card for
 //each Language, adds events to buttons, and handles toggling
 //Notes.
-    renderLanguages(langs){
-        app.pageflag = "index"
-        const container = document.querySelector('#content-holder')
-        container.innerHTML = ""
+    renderLanguageCards(langs){
+        this.pageflag = "index"
+        this.contentContainer.innerHTML = ""
         if (langs.length === 0) {
             Alerts.danger({message: `You don't have any languages yet!
             Click 'New Language' to add one.`})
         }
-        langs.forEach(lang => container.innerHTML += lang.htmlifyForIndex())
-        document.querySelectorAll('.lang-card-btn').forEach(f => {
-            f.addEventListener("click", e => {
-                e.preventDefault()
-                const notes =  `<ul> ${Note.findNotesByLanguage(e.target.id).map(note=>
-                note.htmlifyForIndex()).join('')} </ul>`
-                if (e.target.className === "btn btn-primary lang-card-btn"){
-                    const text = document.querySelector(`.card-text#lang${e.target.id}`)
-                    switch (e.target.innerText){
-                    case "Expand":
-                        e.target.innerText = "Minimize"
-                        text.innerHTML = ""
-                        text.innerHTML += notes
-                        const noteTitles = Array.from(document.getElementsByClassName('note-summary'))
-                        noteTitles.forEach(title => title.addEventListener("click", function(e){
-                            app.renderNoteAsEdit(e.target.parentElement.id)
-                    }))
-                        break;  
-                    case "Minimize":
-                        text.innerHTML = Languages.findById(e.target.id).htmlifyNotesLength()
-                        e.target.innerHTML = "Expand"
-                        break;
-                    }
-                }
-            })
-        })
+        langs.forEach(lang => this.contentContainer.innerHTML += lang.htmlifyForIndex())
+        Events.delegateAccordianControls()
         app.mountDeleteListener()
     }
 
-
+//renders spinner in container
     renderSpinner(){
-        const place = document.getElementById('content-holder')
-        place.innerHTML=(`<div class="spinner-border" role="status">
+        this.contentContainer.innerHTML=(`<div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
         </div>`)
     }
@@ -57,37 +33,20 @@ class App {
 
 // Clears DOM, renders new note form
     renderTakeNotes(){
-        app.pageFlag = "new"
-        document.getElementById('content-holder').innerHTML = Note.newForm()
-    }
-
-    renderNoteAsShow(id_string){
-    
+        this.pageFlag = "new"
+        this.contentContainer.innerHTML = Note.newForm()
     }
 
 
 //renders & populates Note form => adds submit listener,
 //handles POST request => renders index
     renderNoteAsEdit(id_string){
-        const note = Note.findById(id_string) 
-        const place = document.getElementById('content-holder')
-        place.innerHTML = note.editHtmlify()
-        place.childNodes[0].addEventListener("submit", e => {
+        const activeNote = Note.findById(id_string)
+        this.contentContainer.innerHTML = activeNote.editHtmlify()
+        this.contentContainer.childNodes[0].addEventListener("submit", e => {
             e.preventDefault()
-            Object.assign(note, {title: e.target.noteTitle.value, body: e.target.noteBody.value})
-            Fetches.editNote(note)
-            // .then(resp => resp.json())
-            // .then(data => {
-            //     if (data.status !== 200){
-            //         console.log(data.status)
-            //         Alerts.danger(data.error)
-            //     } else {
-            //         console.log(data.status)
-            //         Alerts.success(`${data.note.title} edited successfully!`)
-            //         app.renderSortedLanguages(Languages.all)
-            //     }
-            // })
-            .catch(error => Alerts.danger(error))
+            Object.assign(activeNote, {title: e.target.noteTitle.value, body: e.target.noteBody.value})
+            Fetches.editNote(activeNote)
         })
     }
 
@@ -96,8 +55,7 @@ class App {
 //Handles POST fetch, hides form, and rerenders
 //page based on App.pageFlag.
     mountFormListener(){
-        const form = document.getElementById('newLanguageForm')
-        form.addEventListener( "submit", e => {
+        this.newLanguageForm.addEventListener( "submit", e => {
             e.preventDefault()
             const langData = { language: { name: e.target.langName.value, category: e.target.langCategory.value }}
             Fetches.postLanguage(langData)
@@ -119,7 +77,7 @@ class App {
         const langButton = document.getElementById('langButton')
         langButton.addEventListener("click", function(e){
             e.preventDefault
-            app.renderLanguages(Languages.all)
+            app.renderLanguageCards(Languages.all)
         })
     }
 
@@ -144,34 +102,29 @@ class App {
         })
     }
 
-    //!              here
+
     mountDeleteListener(){
         const buttons = Array.from(document.getElementsByClassName('lang-card-delete-btn'))
             buttons.forEach(button => button.addEventListener("click", e => {
             e.preventDefault()
-            console.log("clicked!")
             Fetches.deleteLanguage(e)
-            console.log(Languages.all.filter(lang => lang.id != e.target.id)
-            )
             Languages.all = Languages.all.filter(lang => lang.id !== Number.parseInt(e.target.id))
-            app.renderLanguages(Languages.all)
+            app.renderLanguageCards(Languages.all)
         }))
 
     }
 
-
 // mounts submit listener on New Note Form
     mountNewNoteFormListener(){
-        const form = document.getElementById('newNoteForm')
-        form.addEventListener("submit", function(e){
+        const newNoteForm = document.getElementById('newNoteForm')
+        newNoteForm.addEventListener("submit", function(e){
             e.preventDefault()
             const noteData = {note: {title: e.target.noteTitle.value, body: e.target.noteBody.value, language_id: e.target.langId.value}}
-            app.postNewNote(noteData)
+            Fetches.postNewNote(noteData)
         })
     }
 
-    
-
+//renders all languages sorted a-z
     renderSortedLanguages(){
       const sortedLanguages = Languages.all.sort((a,b) => {
           let firstLang = a.name.toUpperCase()
@@ -185,25 +138,7 @@ class App {
           // a must be equal to b
             return 0;
       })
-      app.renderLanguages(sortedLanguages)
-    }
-
-//handles POST fetch with new note => re-initializes application
-    postNewNote(noteData){
-        fetch('http://localhost:3000/notes', { 
-            method: "POST",
-            body: JSON.stringify(noteData), 
-            headers: { 
-                "Content-type": "application/json",
-                "Accept": "application/json"
-            }
-        })
-        .then(resp => resp.json())
-        .then(data => {
-            new Note(data)
-        })
-        .then(this.renderSortedLanguages(Languages.all))
-        .catch(error => Alerts.danger(error))
+      this.renderLanguageCards(sortedLanguages)
     }
 
 //changes class between "hidden" and "" on New Language Form
